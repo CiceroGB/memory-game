@@ -1,4 +1,5 @@
 const ID_CONTENT = 'content'
+const ID_PLAY_BTN = 'play'
 class Screen {
 
   static getHtml(item) {
@@ -24,6 +25,11 @@ class Screen {
   static updateImages(itens) {
     const htmlCode = Screen.createStringHtml(itens)
     Screen.contentChange(htmlCode)
+  }
+
+  static settingButtonPlay(functionOnCLick) {
+    const playBtn = document.getElementById(ID_PLAY_BTN)
+    playBtn.onclick = functionOnCLick
   }
 
 }

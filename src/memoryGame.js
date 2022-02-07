@@ -30,5 +30,27 @@ class MemoryGame {
         //get all methods of Screen
         this.screen.updateImages(this.initialHeroes)
 
+        //bind to use 'this' of this class
+        this.screen.settingButtonPlay(this.play.bind(this))
+
     }
+
+    shuffle() {
+        const copies = this.initialHeroes
+            .concat(this.initialHeroes)
+            //create id cards
+            .map(cards => {
+                return Object.assign({}, cards, { id: Math.random() / 0.5 })
+            })
+
+            .sort(() => Math.random() - 0.5)
+
+        this.screen.updateImages(copies)
+    }
+
+    play() {
+        this.shuffle()
+    }
+
+
 }
