@@ -5,9 +5,12 @@ function onLoad() {
         name: 'batman'
     }
 
-    const htmlCode = Screen.getHtml(hero)
-    Screen.contentChange(htmlCode.concat(htmlCode))
-
+    Screen.updateImages([
+        hero,
+        hero,
+        hero,
+        hero
+    ])
 
 }
 

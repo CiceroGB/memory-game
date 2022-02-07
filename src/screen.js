@@ -16,4 +16,14 @@ class Screen {
     content.innerHTML = htmlCode
   }
 
+  static createStringHtml(itens) {
+    return itens.map(item => Screen.getHtml(item)).join('')
+
+  }
+
+  static updateImages(itens) {
+    const htmlCode = Screen.createStringHtml(itens)
+    Screen.contentChange(htmlCode)
+  }
+
 }
