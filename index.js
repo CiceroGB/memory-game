@@ -1,17 +1,11 @@
 function onLoad() {
 
-    const hero = {
-        img: './files/batman.png',
-        name: 'batman'
+    const dependences = {
+        screen: Screen
     }
 
-    Screen.updateImages([
-        hero,
-        hero,
-        hero,
-        hero
-    ])
-
+    const memoryGame = new MemoryGame(dependences)
+    memoryGame.start()
 }
 
 window.onload = onLoad
