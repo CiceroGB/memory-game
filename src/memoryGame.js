@@ -22,6 +22,10 @@ class MemoryGame {
 
         ]
 
+        this.defaultIcon = './files/default.png'
+
+        this.hidenHeroes = []
+        this.selectedHeroes = []
     }
 
     //if you dont need this use static
@@ -30,8 +34,10 @@ class MemoryGame {
         //get all methods of Screen
         this.screen.updateImages(this.initialHeroes)
 
+
         //bind to use 'this' of this class
         this.screen.settingButtonPlay(this.play.bind(this))
+        this.screen.settingButtonCheckSelected(this.checkSelected.bind(this))
 
     }
 
@@ -42,10 +48,62 @@ class MemoryGame {
             .map(cards => {
                 return Object.assign({}, cards, { id: Math.random() / 0.5 })
             })
-
             .sort(() => Math.random() - 0.5)
 
         this.screen.updateImages(copies)
+
+        setTimeout(() => { this.hideHeroes(copies) }, 1000)
+    }
+
+    hideHeroes(heroes) {
+        const hideHeroes = heroes.map(({ name, id }) => ({
+            id,
+            name,
+            img: this.defaultIcon
+        }))
+        this.screen.updateImages(hideHeroes)
+        this.hidenHeroes = hideHeroes
+    }
+
+    checkSelected(id, name) {
+        const item = { id, name }
+        const selectedHeroes = this.selectedHeroes.length
+
+        switch (selectedHeroes) {
+            case 0:
+                this.selectedHeroes.push(item)
+                break;
+            case 1:
+                const [option1] = this.selectedHeroes
+
+                this.selectedHeroes = []
+
+                if (option1.name === item.name &&
+
+                    option1.id !== item.id
+                ) {
+                    this.showHeroes(item.name)
+
+                    this.screen.showMessage()
+
+                    return;
+                }
+
+                this.screen.showMessage(false)
+
+                break;
+        }
+
+
+
+    }
+
+    showHeroes(heroName) {
+
+        const { img } = this.initialHeroes.find(({ name }) => name === heroName)
+
+        this.screen.showHeroes(heroName, img)
+
     }
 
     play() {
