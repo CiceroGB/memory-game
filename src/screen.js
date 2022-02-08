@@ -1,7 +1,12 @@
+const util = Util
+
 const ID_CONTENT = 'content'
 const ID_PLAY_BTN = 'play'
 const ID_MESSAGE = 'message'
 const INVISIBLE_CLASS = 'invisible'
+const ID_LOADING = 'loading'
+const ID_COUNTER = 'counter'
+const ID_BTN_SHOW_ALL = 'showAll'
 const MESSAGES = {
   success: {
     text: 'Match',
@@ -17,7 +22,7 @@ class Screen {
   static getHtml(item) {
     return `
       <div class="col-md-3 ">
-        <div class="card m-4" style="width: 50%;"onclick="window.checkSelected('${item.id}', '${item.name}')">
+        <div class="card m-4"onclick="window.checkSelected('${item.id}', '${item.name}')">
           <img src="${item.img}" name=${item.name} class="card-img-top" alt="...">
         </div>
       </div>
@@ -48,6 +53,11 @@ class Screen {
     window.checkSelected = functionOnCLick
   }
 
+  static settingButtonShowAll(funcaoOnClick) {
+    const btnShowAll = document.getElementById(ID_BTN_SHOW_ALL)
+    btnShowAll.onclick = funcaoOnClick
+}
+
   static showHeroes(heroName, img) {
     const htmlElements = document.getElementsByName(heroName)
     htmlElements.forEach(item => (item.src = img))
@@ -66,9 +76,38 @@ class Screen {
       elemento.innerText = MESSAGES.err.text
     }
     elemento.classList.remove(INVISIBLE_CLASS)
-    setTimeout(() => { elemento.classList.add(INVISIBLE_CLASS) }, 1000)
+
+    await util.timeout(1000)
+    elemento.classList.add(INVISIBLE_CLASS)
 
   }
 
+  static showLoading(show = true) {
+    const loading = document.getElementById(ID_LOADING)
+    if (show) {
+      loading.classList.remove(INVISIBLE_CLASS)
+      return;
+    }
+    loading.classList.add(INVISIBLE_CLASS)
+  }
 
+  static startCounter() {
+    let maxCount = 3
+    const counterElement = document.getElementById(ID_COUNTER)
+
+    const findText = "$$counter"
+    const defaultText = `Starting in ${findText} seconds...`
+
+    const updateText = () =>
+      (counterElement.innerHTML = defaultText.replace(findText, maxCount--))
+
+    updateText()
+    const idInterval = setInterval(updateText, 1000)
+    return idInterval
+  }
+
+  static clearCount(idInterval){
+    clearInterval(idInterval)
+    document.getElementById(ID_COUNTER).innerHTML = ""
+  }
 }

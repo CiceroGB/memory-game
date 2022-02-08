@@ -1,6 +1,7 @@
 class MemoryGame {
-    constructor({ screen }) {
+    constructor({ screen, util }) {
         this.screen = screen
+        this.util = util
 
         this.initialHeroes = [
             {
@@ -24,7 +25,7 @@ class MemoryGame {
 
         this.defaultIcon = './files/default.png'
 
-        this.hidenHeroes = []
+        this.hiddenHeroes = []
         this.selectedHeroes = []
     }
 
@@ -38,10 +39,11 @@ class MemoryGame {
         //bind to use 'this' of this class
         this.screen.settingButtonPlay(this.play.bind(this))
         this.screen.settingButtonCheckSelected(this.checkSelected.bind(this))
+        this.screen.settingButtonShowAll(this.showAll.bind(this))
 
     }
 
-    shuffle() {
+    async shuffle() {
         const copies = this.initialHeroes
             .concat(this.initialHeroes)
             //create id cards
@@ -51,8 +53,13 @@ class MemoryGame {
             .sort(() => Math.random() - 0.5)
 
         this.screen.updateImages(copies)
-
-        setTimeout(() => { this.hideHeroes(copies) }, 1000)
+        this.screen.showLoading()
+        
+        const idInterval = this.screen.startCounter()
+        await this.util.timeout(3000)
+        this.screen.clearCount(idInterval)
+        this.hideHeroes(copies)
+        this.screen.showLoading(false)
     }
 
     hideHeroes(heroes) {
@@ -62,7 +69,7 @@ class MemoryGame {
             img: this.defaultIcon
         }))
         this.screen.updateImages(hideHeroes)
-        this.hidenHeroes = hideHeroes
+        this.hiddenHeroes = hideHeroes
     }
 
     checkSelected(id, name) {
@@ -104,6 +111,16 @@ class MemoryGame {
 
         this.screen.showHeroes(heroName, img)
 
+    }
+
+    showAll() {
+
+        const hiddenHeroes = this.hiddenHeroes
+        for(const hero of hiddenHeroes) {
+            const { img } = this.initialHeroes.find(item => item.name === hero.name)
+            hero.img = img
+        }
+        this.screen.updateImages(hiddenHeroes)
     }
 
     play() {
